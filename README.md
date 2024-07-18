@@ -45,6 +45,7 @@ The objective of this task is to demonstrate the ability to work with the Auto M
        df.to_csv('auto_mpg_with_power_to_weight_ratio.csv', index=False)
 
 8) Running the code
+   
     A. Run the redis server using the command "redis-server" in the terminal.
    
     B. Navigate to the directory containing the script and start a Celery worker by running:
