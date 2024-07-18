@@ -5,26 +5,26 @@ The objective of this task is to demonstrate the ability to work with the Auto M
 
 1) Set up the environment with the necessary packages.
 
-    1. Install the required packages: pip3 install pandas celery redis.
-    2. Set up a Redis server locally to be used as the message broker for Celery: One can go to redis.io to check the steps required to install redis in their local machine. For convenience you can also use Docker to start a redis server using the commmand 
+    A. Install the required packages: pip3 install pandas celery redis.
+    B. Set up a Redis server locally to be used as the message broker for Celery: One can go to redis.io to check the steps required to install redis in their local machine. For convenience you can also use Docker to start a redis server using the commmand 
     docker run -d -p 6379:6379 redis
     Link - https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/install-redis-on-mac-os/ 
 
 2) Load and preprocess the Auto MPG dataset.
 
-    1. We can load the Auto MPG dataset from the provided URL and preprocess it by removing rows with missing values(?). First, we replace missing values(?) with NaN using na_values and then we drop the rows with NaN value and reset the dataframe index.
+    A. We can load the Auto MPG dataset from the provided URL and preprocess it by removing rows with missing values(?). First, we replace missing values(?) with NaN using na_values and then we drop the rows with NaN value and reset the dataframe index.
     
     Dataset URL - https://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data
 
 3) Setting Up Celery for Parallel Processing & Define a Celery task to calculate the power-to-weight ratio.
 
-    1. Setting Up Celery Instance and defining the task
+    A. Setting Up Celery Instance and defining the task
         We import Celery and define the task in celery_app.py, ensuring it's configured to use Redis as both the broker and backend.
         Once the Celery instance is created we create a Celery task to calculate the power-to-weight ratio for a given row using the formula:
         
         Power-to-Weight Ratio= Weight / Horsepower
     
-    2. Grouping Tasks and parallel execution
+    B. Grouping Tasks and parallel execution
         After configuring the celery, we create an empty list to store the parallel tasks and the we iterate through each row of the DataFrame to create tasks (calculate_power_to_weight.s(...)) using the .s() method, which creates a signature for the task. We append each task to the tasks list.
         
         Then we create a group of tasks (job) using group(tasks). This groups all the individual tasks together.
@@ -41,8 +41,8 @@ The objective of this task is to demonstrate the ability to work with the Auto M
     df.to_csv('auto_mpg_with_power_to_weight_ratio.csv', index=False)
 
 5) Running the code
-    1. Run the redis server using the command "redis-server" in the terminal. 
-    2. Navigate to the directory containing the script and start a Celery worker by running:
+    A. Run the redis server using the command "redis-server" in the terminal. 
+    B. Navigate to the directory containing the script and start a Celery worker by running:
     celery -A celery_app  worker --loglevel=info
     
     The breakdown of the above command 
