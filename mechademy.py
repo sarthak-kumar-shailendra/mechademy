@@ -9,7 +9,7 @@ def auto_mpg_data_analysis_without_using_celery():
     column_names = ["mpg", "cylinders", "displacement", "horsepower", "weight", "acceleration", "model_year", "origin", "car_name"]
 
     # reading and preprocessing of the data. Data cleaning: Replace missing values(?) with NaN using na_values.
-    df = pd.read_csv('/Users/sarthakkumar/Downloads/mechademy/auto+mpg/auto-mpg.data', delim_whitespace=True, names=column_names,  na_values = "?")
+    df = pd.read_csv('./auto+mpg/auto-mpg.data', delim_whitespace=True, names=column_names,  na_values = "?")
 
     # Dropping the rows with NaN value
     df.dropna(inplace=True)
@@ -51,7 +51,7 @@ def auto_mpg_data_analysis_using_celery():
     column_names = ["mpg", "cylinders", "displacement", "horsepower", "weight", "acceleration", "model_year", "origin", "car_name"]
 
     # reading and preprocessing of the data. Data cleaning: Replace missing values(?) with NaN using na_values.
-    df = pd.read_csv('/Users/sarthakkumar/Downloads/mechademy/auto+mpg/auto-mpg.data', delim_whitespace=True, names=column_names,  na_values = "?")
+    df = pd.read_csv('./auto+mpg/auto-mpg.data', delim_whitespace=True, names=column_names,  na_values = "?")
 
     # Dropping the rows with NaN value
     df.dropna(inplace=True)
