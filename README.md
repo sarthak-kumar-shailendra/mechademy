@@ -60,7 +60,7 @@ The objective of this task is to demonstrate the ability to work with the Auto M
     
     --loglevel=info: This option sets the logging level for the worker process. The info level provides a moderate amount of log output, which includes basic information about task processing, worker status, and any errors or warnings.
 
-    3. Open another terminal, navigate to the directory containing the script, and run
+    C. Open another terminal, navigate to the directory containing the script, and run
     
             python3 mechademy.py
 
