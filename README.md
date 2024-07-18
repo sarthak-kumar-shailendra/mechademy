@@ -1,4 +1,4 @@
-<img width="660" alt="Screenshot 2024-07-19 at 3 38 25 AM" src="https://github.com/user-attachments/assets/9b627ea8-f051-4527-97d6-54ab82613f55">Auto MPG Data Analysis with Celery
+Auto MPG Data Analysis with Celery
 
 ## Objective
 The objective of this task is to demonstrate the ability to work with the Auto MPG dataset, perform data analysis, and use Celery to handle parallel processing tasks. We aim to calculate the power-to-weight ratio for each car using Celery for parallel processing.
