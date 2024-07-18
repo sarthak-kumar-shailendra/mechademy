@@ -1,4 +1,4 @@
-Auto MPG Data Analysis with Celery
+<img width="660" alt="Screenshot 2024-07-19 at 3 38 25 AM" src="https://github.com/user-attachments/assets/9b627ea8-f051-4527-97d6-54ab82613f55">Auto MPG Data Analysis with Celery
 
 ## Objective
 The objective of this task is to demonstrate the ability to work with the Auto MPG dataset, perform data analysis, and use Celery to handle parallel processing tasks. We aim to calculate the power-to-weight ratio for each car using Celery for parallel processing.
@@ -73,7 +73,8 @@ The results were
 total time taken without using celery: 0.012104272842407227 seconds
 total time taken using celery: 0.7963268756866455 seconds
 
-![alt text](<Screenshot 2024-07-19 at 3.30.35 AM.png>)
+<img width="661" alt="Screenshot 2024-07-19 at 3 30 35 AM" src="https://github.com/user-attachments/assets/6cd53186-1182-4a33-b2ac-86056ff8ca7b">
+
 
 This was because our celery task was a lightweight task and due to the lack of overhead from inter-process communication. There is some overhead associated with task queuing, dispatching, and collecting results, which can make it slower for very small or simple tasks.
 
@@ -86,7 +87,8 @@ This time the results were
 total time taken without using celery: 4.8555028438568115 seconds
 total time taken using celery: 0.7521679401397705 seconds
 
-![alt text](<Screenshot 2024-07-19 at 3.38.25 AM.png>)
+<img width="660" alt="Screenshot 2024-07-19 at 3 38 25 AM" src="https://github.com/user-attachments/assets/5e06ebe2-53d7-4658-a9ad-4f59d61c7b12">
+
 When we were not using celery and doing synchronous operation for all the 392 ~ 400 rows there was a wait time of 0.01 seconds. 
 400*0.01= 4 seconds 
 So, the execution without celery takes around 4.8 seconds.
@@ -94,4 +96,4 @@ But since we are doing parallel processing in celery, suspending the execution f
 
 Once the processing is done by the worker processes, the results get stored in the redis. We can see that all the 392 results are present in the redis.
 
-![alt text](<Screenshot 2024-07-19 at 3.55.50 AM.png>)
+<img width="642" alt="Screenshot 2024-07-19 at 3 55 50 AM" src="https://github.com/user-attachments/assets/d95fb3ce-89fa-41eb-803c-91c7e28cdefd">
