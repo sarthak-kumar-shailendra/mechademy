@@ -5,67 +5,67 @@ The objective of this task is to demonstrate the ability to work with the Auto M
 
 1) Set up the environment with the necessary packages.
 
-1. Install the required packages: pip3 install pandas celery redis
-2. Set up a Redis server locally to be used as the message broker for Celery: One can go to redis.io to check the steps required to install redis in their local machine. For convenience you can also use Docker to start a redis server using the commmand docker run -d -p 6379:6379 redis
-Link - https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/install-redis-on-mac-os/ 
+    1. Install the required packages: pip3 install pandas celery redis.
+    2. Set up a Redis server locally to be used as the message broker for Celery: One can go to redis.io to check the steps required to install redis in their local machine. For convenience you can also use Docker to start a redis server using the commmand 
+    docker run -d -p 6379:6379 redis
+    Link - https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/install-redis-on-mac-os/ 
 
 2) Load and preprocess the Auto MPG dataset.
 
-We can load the Auto MPG dataset from the provided URL and preprocess it by removing rows with missing values(?). First, we replace missing values(?) with NaN using na_values and then we drop the rows with NaN value and reset the dataframe index.
-
-Dataset URL - https://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data
+    1. We can load the Auto MPG dataset from the provided URL and preprocess it by removing rows with missing values(?). First, we replace missing values(?) with NaN using na_values and then we drop the rows with NaN value and reset the dataframe index.
+    
+    Dataset URL - https://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data
 
 3) Setting Up Celery for Parallel Processing & Define a Celery task to calculate the power-to-weight ratio.
 
-1. Setting Up Celery Instance and defining the task
-We import Celery and define the task in celery_app.py, ensuring it's configured to use Redis as both the broker and backend.
-Once the Celery instance is created we create a Celery task to calculate the power-to-weight ratio for a given row using the formula:
-
-Power-to-Weight Ratio= Weight / Horsepower
-
-
-2. Grouping Tasks and parallel execution
-After configuring the celery, we create an empty list to store the parallel tasks and the we iterate through each row of the DataFrame to create tasks (calculate_power_to_weight.s(...)) using the .s() method, which creates a signature for the task. We append each task to the tasks list.
-
-Then we create a group of tasks (job) using group(tasks). This groups all the individual tasks together.
-Then we apply the group asynchronously using job.apply_async(), which starts the execution of all tasks in parallel.
+    1. Setting Up Celery Instance and defining the task
+        We import Celery and define the task in celery_app.py, ensuring it's configured to use Redis as both the broker and backend.
+        Once the Celery instance is created we create a Celery task to calculate the power-to-weight ratio for a given row using the formula:
+        
+        Power-to-Weight Ratio= Weight / Horsepower
+    
+    2. Grouping Tasks and parallel execution
+        After configuring the celery, we create an empty list to store the parallel tasks and the we iterate through each row of the DataFrame to create tasks (calculate_power_to_weight.s(...)) using the .s() method, which creates a signature for the task. We append each task to the tasks list.
+        
+        Then we create a group of tasks (job) using group(tasks). This groups all the individual tasks together.
+        Then we apply the group asynchronously using job.apply_async(), which starts the execution of all tasks in parallel.
 
 4) Combine Results and update the dataframe:
 
-We collect the results from the Celery tasks using result.get(). This waits until all tasks are completed and gathers their results. Then we can iterate through power_to_weight_ratios to print or process each result as needed. 
-
-We can directly add the column 'power_to_weight_ratio' in the DataFrame using
-df['power_to_weight_ratio'] = power_to_weight_ratios
-
-To Save the updated DataFrame to a new CSV file we can run the following command
-df.to_csv('auto_mpg_with_power_to_weight_ratio.csv', index=False)
+    We collect the results from the Celery tasks using result.get(). This waits until all tasks are completed and gathers their results. Then we can iterate through power_to_weight_ratios to print or process each result as needed. 
+    
+    We can directly add the column 'power_to_weight_ratio' in the DataFrame using
+    df['power_to_weight_ratio'] = power_to_weight_ratios
+    
+    To Save the updated DataFrame to a new CSV file we can run the following command
+    df.to_csv('auto_mpg_with_power_to_weight_ratio.csv', index=False)
 
 5) Running the code
-Run the redis server using the command "redis-server" in the terminal. 
-Navigate to the directory containing the script and start a Celery worker by running:
-celery -A celery_app  worker --loglevel=info
+    1. Run the redis server using the command "redis-server" in the terminal. 
+    2. Navigate to the directory containing the script and start a Celery worker by running:
+    celery -A celery_app  worker --loglevel=info
+    
+    The breakdown of the above command 
+    celery: This is the command-line interface for Celery. It allows you to start workers, manage tasks, inspect tasks, and more.
+    
+    -A celery_app: The -A option specifies the Celery application instance to use. In this case, celery_app is the name of your Celery application instance. It is typically the module where your Celery app is defined.
+    
+    worker: This part of the command tells Celery to start a worker process. A worker is a process that executes tasks defined in your Celery application. Workers listen for tasks on the message broker and execute them when they are received.
+    
+    --loglevel=info: This option sets the logging level for the worker process. The info level provides a moderate amount of log output, which includes basic information about task processing, worker status, and any errors or warnings.
 
-The breakdown of the above command 
-celery: This is the command-line interface for Celery. It allows you to start workers, manage tasks, inspect tasks, and more.
-
--A celery_app: The -A option specifies the Celery application instance to use. In this case, celery_app is the name of your Celery application instance. It is typically the module where your Celery app is defined.
-
-worker: This part of the command tells Celery to start a worker process. A worker is a process that executes tasks defined in your Celery application. Workers listen for tasks on the message broker and execute them when they are received.
-
---loglevel=info: This option sets the logging level for the worker process. The info level provides a moderate amount of log output, which includes basic information about task processing, worker status, and any errors or warnings.
-
-Open another terminal, navigate to the directory containing the script, and run
-python3 mechademy.py
+    3. Open another terminal, navigate to the directory containing the script, and run
+    python3 mechademy.py
 
 ## Thought Process, Decision Making and Challenges Faced and how I overcame them
-1. Setting Up the Environment: The first challenge/step was to ensure that all necessary packages and dependencies were installed and also that the local redis server was running properly. To test whether Redis is working properly or not I typed the following command in the terminal. 
- redis-cli ping 
-2. Handling Missing Values: The next challenge was to ensure that the dataset is clean and free of missing values to prevent errors during computation. Missing values in the horsepower column were handled by dropping rows with missing data.
-3. Handling ZeroDivisionError: During the Celery task creation to calculate the power-to-weight ratio for each row I handled the case where horsepower is zero to avoid division by zero errors.
-4. Celery Task: Since we have to calculate the power-to-weight for each of the rows it is essential to set up the Celery worker that can handle multiple tasks concurrently and leverage the power of multi-core processors to speed up processing. To create tasks for all the rows, we used .s() signature function and stored it in a list for parallel processing.
-5. Parallel Processing & Resource Management: By leveraging Celery's group functionality and apply_async(), we efficiently handle the parallel execution of tasks. We can monitor system performance and adjusted the number of concurrent workers as needed. By default, Celery will create as many worker processes as the number of CPU cores available on the machine. This can be controlled by adding the --concurrency option while starting the worker.
-6. Updating dataframe: Resetting the dataframe index helped us in inserting the collected results at their correct index in the dataFrame .
-7. Testing and Validation: We tested the code by running it on the provided dataset and verifying that the output CSV file contains the calculated power-to-weight ratios for each car.
+    1. Setting Up the Environment: The first challenge/step was to ensure that all necessary packages and dependencies were installed and also that the local redis server was running properly. To test whether Redis is working properly or not I typed the following command in the terminal. 
+     redis-cli ping 
+    2. Handling Missing Values: The next challenge was to ensure that the dataset is clean and free of missing values to prevent errors during computation. Missing values in the horsepower column were handled by dropping rows with missing data.
+    3. Handling ZeroDivisionError: During the Celery task creation to calculate the power-to-weight ratio for each row I handled the case where horsepower is zero to avoid division by zero errors.
+    4. Celery Task: Since we have to calculate the power-to-weight for each of the rows it is essential to set up the Celery worker that can handle multiple tasks concurrently and leverage the power of multi-core processors to speed up processing. To create tasks for all the rows, we used .s() signature function and stored it in a list for parallel processing.
+    5. Parallel Processing & Resource Management: By leveraging Celery's group functionality and apply_async(), we efficiently handle the parallel execution of tasks. We can monitor system performance and adjusted the number of concurrent workers as needed. By default, Celery will create as many worker processes as the number of CPU cores available on the machine. This can be controlled by adding the --concurrency option while starting the worker.
+    6. Updating dataframe: Resetting the dataframe index helped us in inserting the collected results at their correct index in the dataFrame .
+    7. Testing and Validation: We tested the code by running it on the provided dataset and verifying that the output CSV file contains the calculated power-to-weight ratios for each car.
 
 I am also measuring the start time and end time using time module to calculate the total time taken to process the tasks.
 Also, I wrote a similar function for calculating the ratios for all the rows in a synchronous manner without using celery.
